@@ -34,11 +34,19 @@ const SignUp = async (req, res) => {
       password: hashedPassword,
     });
 
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 2 * 60 * 60 * 1000, // 1 day
+    });
+
     res.status(201).json({
       message: "User registered successfully",
-      token: generateToken(user),
     });
-  } catch (error) {}
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
 };
 
 const Login = async (req, res) => {
@@ -61,25 +69,50 @@ const Login = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
 
     UserExist.lastLogin = new Date();
+
     await UserExist.save();
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 2 * 60 * 60 * 1000, // 2 hr
+    });
+
     res.status(200).json({
       message: "Login successful",
-      token: generateToken(UserExist),
     });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
 };
 
-const getCurrentUser=async(req,res)=>{
-    try {
-        const user=await User.findById(req.user.id).select("-password")
+const getCurrentUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
 
-        if(!user)
-            return res.status(404).json({ message: "User not found" });
-    } catch (error) {
-         res.status(500).json({ message: "Server error" });
-    }
-}
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-module.exports = { SignUp ,Login,getCurrentUser};
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+const Logout = (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    sameSite: "strict",
+    secure: true,
+  });
+
+  return res.status(200).json({
+    success: true,
+    message: "Logged out successfully",
+  });
+};
+
+module.exports = { SignUp, Login, getCurrentUser, Logout };
