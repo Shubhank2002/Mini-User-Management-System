@@ -1,4 +1,5 @@
 const User = require("../Models/UserModel");
+const bcrypt=require('bcrypt')
 
 const updateProfile = async (req, res) => {
   const { fullName, email } = req.body;
