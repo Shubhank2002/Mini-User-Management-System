@@ -2,6 +2,14 @@ const User = require("../Models/UserModel");
 const bcrypt = require("bcrypt");
 const generateToken = require("../utils/GenerateToken");
 
+const cookieOptions = {
+  httpOnly: true,
+  secure: true, // REQUIRED on Railway
+  sameSite: "none", // REQUIRED for cross-origin
+  path: "/",
+  maxAge: 2 * 60 * 60 * 1000, // 2 hours
+};
+
 const SignUp = async (req, res) => {
   const { fullName, email, password } = req.body;
 
@@ -36,13 +44,7 @@ const SignUp = async (req, res) => {
 
     const token = generateToken(user);
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-       path: "/", 
-      maxAge: 2 * 60 * 60 * 1000, // 1 day
-    });
+    res.cookie("token", token, cookieOptions);
 
     res.status(201).json({
       message: "User registered successfully",
@@ -67,7 +69,7 @@ const Login = async (req, res) => {
     if (UserExist.status === "inactive")
       return res.status(403).json({ message: "Account is deactivated" });
 
-    const isMatch =await bcrypt.compare(password, UserExist.password);
+    const isMatch = await bcrypt.compare(password, UserExist.password);
 
     if (!isMatch)
       return res.status(401).json({ message: "Invalid credentials" });
@@ -78,18 +80,18 @@ const Login = async (req, res) => {
 
     const token = generateToken(UserExist);
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: false,
-      path: "/",
-      sameSite: "lax",
-      maxAge: 2 * 60 * 60 * 1000, // 2 hr
-    });
+    res.cookie("token", token, cookieOptions);
 
     res.status(200).json({
       message: "Login successful",
       success: true,
-      user:UserExist
+      user: {
+        _id: UserExist._id,
+        fullName: UserExist.fullName,
+        email: UserExist.email,
+        role: UserExist.role,
+        status: UserExist.status,
+      },
     });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
@@ -112,12 +114,7 @@ const getCurrentUser = async (req, res) => {
 };
 
 const Logout = (req, res) => {
-  res.clearCookie("token", {
-    httpOnly: true,
-    secure: false,
-    sameSite: "lax",
-    path: "/",
-  });
+  res.clearCookie("token", cookieOptions);
 
   return res.status(200).json({
     success: true,
