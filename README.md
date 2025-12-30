@@ -2,7 +2,12 @@
 This project is a Mini User Management System built to demonstrate full-stack authentication and user handling using the MERN stack.
 It supports user signup, login, authentication using JWT (stored in cookies), protected routes, and secure API access. 
 
-Deployed Link: https://mini-user-management-system.netlify.app/
+##Deployed Links
+### Frontend
+- https://mini-user-management-system.netlify.app/
+### Backend
+- https://mini-user-management-system-hywm.onrender.com
+
 
 ## Tech Stack Used
 ### Frontend
