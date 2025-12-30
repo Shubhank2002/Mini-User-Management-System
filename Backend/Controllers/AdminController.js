@@ -29,22 +29,27 @@ const getAllUsers = async (req, res) => {
 };
 
 const deactivateUser = async (req, res) => {
-  const user = await User.findById(req.params.id);
+  try {
+    const user = await User.findById(req.params.id);
+    const { actionType } = req.body;
 
-  if (!user) {
-    return res.status(404).json({
-      success: false,
-      message: "User not found",
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    user.status = actionType;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "User deactivated successfully",
     });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "internal server error" });
   }
-
-  user.status = false;
-  await user.save();
-
-  res.status(200).json({
-    success: true,
-    message: "User deactivated successfully",
-  });
 };
 
 module.exports = { deactivateUser, getAllUsers };

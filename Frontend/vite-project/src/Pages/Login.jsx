@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -49,10 +51,12 @@ const Login = () => {
 
       if (data.success) {
         localStorage.setItem("user", JSON.stringify(data.user));
+        toast.success("Login successful");
         navigate("/dashboard");
       }
     } catch (error) {
       setError(error?.response?.data?.message || "Login failed. Try again.");
+      toast.error("Invalid credentials");
     } finally {
       setloading(false);
     }
@@ -60,13 +64,17 @@ const Login = () => {
 
   return (
     <div className="min-h-screen w-screen flex items-center justify-center bg-linear-to-br from-purple-100 to-purple-300">
-      <div className="w-1/3 flex flex-col justify-center bg-white rounded-xl shadow-lg p-8">
+      <ToastContainer position="top-right" autoClose={3000} />
+      <div className="sm:w-1/3 flex flex-col justify-center bg-white rounded-xl shadow-lg p-8">
         {/* Header */}
         <div className="text-center mb-6 space-y-5">
-          <h1 className="text-3xl font-semibold text-gray-800">
+          <h1 className="sm:text-3xl font-semibold text-gray-800">
             Mini User Management System
           </h1>
-          <p className="text-lg text-gray-500 mt-1">Login to your account</p>
+
+          <p className="text-md sm:text-lg text-gray-500 mt-1">
+            Login to your account
+          </p>
         </div>
 
         {/* Form */}

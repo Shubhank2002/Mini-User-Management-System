@@ -4,8 +4,8 @@ import AdminDashboard from "../components/AdminDashboard";
 import UserProfile from "../components/UserProfile";
 import Navbar from "../components/Navbar";
 
-const Dashboard = () => {
-  const [user, setuser] = useState(null);
+const Dashboard = ({ user, setUser }) => {
+  
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   useEffect(() => {
@@ -16,7 +16,7 @@ const Dashboard = () => {
           withCredentials: true,
         });
         if (data.success) {
-          setuser(data.user);
+          setUser(data.user);
         }
       } catch (error) {
         setError(error?.response?.data?.message);
@@ -33,8 +33,8 @@ const Dashboard = () => {
   return (
     <>
       <div className="flex  flex-col min-h-screen bg-gray-50">
-        <Navbar user={user} setUser={setuser}/>
-        {user?.role === "admin" ? <AdminDashboard /> : <UserProfile user={user} setUser={setuser}/>}</div>
+        <Navbar user={user} setUser={setUser}/>
+        {user?.role === "admin" ? <AdminDashboard /> : <UserProfile user={user} setUser={setUser}/>}</div>
     </>
   );
 };

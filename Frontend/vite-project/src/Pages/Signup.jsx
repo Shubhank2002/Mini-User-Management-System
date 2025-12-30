@@ -64,8 +64,8 @@ const Signup = () => {
     }
   };
   return (
-    <div className="min-h-screen w-screen flex items-center justify-center bg-linear-to-br from-purple-100 to-purple-300">
-      <div className="w-1/3 bg-white rounded-xl shadow-lg p-8">
+    <div className="min-h-screen px-4 w-screen flex items-center justify-center bg-linear-to-br from-purple-100 to-purple-300">
+      <div className="sm:w-1/3 flex flex-col bg-white rounded-xl shadow-lg p-8">
         {/* Header */}
         <div className="text-center mb-6 space-y-4">
           <h1 className="text-3xl font-semibold text-gray-800">
@@ -132,7 +132,7 @@ const Signup = () => {
           Already have an account?{" "}
           <span
             className="text-purple-600 font-medium cursor-pointer hover:underline"
-            onClick={() => navigate("/login")}
+            onClick={() => navigate("/")}
           >
             Login
           </span>

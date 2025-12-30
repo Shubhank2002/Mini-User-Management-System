@@ -7,7 +7,10 @@ import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import Dashboard from "./Pages/Dashboard";
 import ProtectedRoute from "./ProtectedRoutes";
+import UserProfile from "./components/UserProfile";
 function App() {
+
+  const [user, setUser] = useState(null);
   return (
     <>
       <Router>
@@ -18,7 +21,15 @@ function App() {
             path="/dashboard"
             element={
               <ProtectedRoute>
-                <Dashboard />
+                <Dashboard user={user} setUser={setUser}/>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/profile"
+            element={
+              <ProtectedRoute>
+                <UserProfile user={user} setUser={setUser}/>
               </ProtectedRoute>
             }
           />

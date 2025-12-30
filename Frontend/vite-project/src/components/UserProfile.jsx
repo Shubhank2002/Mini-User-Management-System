@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const UserProfile = ({ user, setUser }) => {
     const navigate=useNavigate()
+    const location = useLocation();
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -18,15 +21,19 @@ const UserProfile = ({ user, setUser }) => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
+  const resolvedUser = user || location.state?.user;
+
   // Populate form on load
   useEffect(() => {
-    if (user) {
+    if (resolvedUser) {
       setForm({
         fullName: user.fullName,
         email: user.email,
       });
+    }else{
+        navigate('/')
     }
-  }, [user]);
+  }, [resolvedUser,navigate]);
 
   const handleProfileChange = (e) => {
     setError("");
@@ -55,6 +62,7 @@ const UserProfile = ({ user, setUser }) => {
 
       setUser(data?.user);
       setMessage("Profile updated successfully");
+      toast.info("Profile updated");
     } catch (err) {
       setError(err.response?.data?.message || "Update failed");
     } finally {
@@ -74,6 +82,7 @@ const UserProfile = ({ user, setUser }) => {
 
       setPasswordForm({ currentPassword: "", newPassword: "" });
       setMessage("Password changed successfully");
+       toast.info("Password updated");
       navigate('/')
     } catch (err) {
       setError(err.response?.data?.message || "Password update failed");
@@ -97,6 +106,7 @@ const UserProfile = ({ user, setUser }) => {
 
   return (
     <div className="max-w-3xl mx-auto p-8 text-black">
+        <ToastContainer position="top-right" autoClose={3000}/>
       <h1 className="text-2xl font-semibold mb-6 text-center">User Profile</h1>
 
       {/* Messages */}
