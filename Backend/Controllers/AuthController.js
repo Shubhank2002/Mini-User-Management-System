@@ -26,13 +26,15 @@ const SignUp = async (req, res) => {
       });
     }
 
-    const salt = bcrypt.genSalt(10);
-    const hashedPassword = bcrypt.hash(password, salt);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
     const user = await User.create({
       fullName,
       email,
       password: hashedPassword,
     });
+
+    const token = generateToken(user);
 
     res.cookie("token", token, {
       httpOnly: true,
@@ -43,6 +45,7 @@ const SignUp = async (req, res) => {
 
     res.status(201).json({
       message: "User registered successfully",
+      success: true,
     });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
@@ -60,7 +63,7 @@ const Login = async (req, res) => {
     if (!UserExist)
       return res.status(401).json({ message: "Please Signup first" });
 
-    if ((UserExist.status = "inactive"))
+    if (UserExist.status === "inactive")
       return res.status(403).json({ message: "Account is deactivated" });
 
     const isMatch = bcrypt.compare(password, UserExist.password);
@@ -72,6 +75,8 @@ const Login = async (req, res) => {
 
     await UserExist.save();
 
+    const token = generateToken(UserExist);
+
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -81,6 +86,7 @@ const Login = async (req, res) => {
 
     res.status(200).json({
       message: "Login successful",
+      success: true,
     });
   } catch (error) {
     res.status(500).json({ message: "Server error" });

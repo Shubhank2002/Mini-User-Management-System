@@ -1,6 +1,9 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [error, setError] = useState("");
   const [form, setForm] = useState({
     fullName: "",
@@ -11,16 +14,54 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e) => {
-    const {name,value}=e.target
+    const { name, value } = e.target;
 
     setForm({
-        ...form,[name]:value
-    })
-    setError('')
+      ...form,
+      [name]: value,
+    });
+    setError("");
   };
-  const handleSignup = () => {
-    e.preventDefault()
-    
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    setError("");
+    const { fullName, email, password, confirmPassword } = form;
+    const url = import.meta.env.VITE_API_URL;
+
+    if (!fullName || !email || !password || !confirmPassword) {
+      return setError("All fields are required");
+    }
+    if (!email.includes("@")) {
+      return setError("Please enter a valid email");
+    }
+
+    if (password.length < 8) {
+      return setError("Password must be at least 8 characters");
+    }
+
+    if (password !== confirmPassword) {
+      return setError("Passwords do not match");
+    }
+
+    try {
+      setLoading(true);
+
+      const { data } = await axios.post(
+        `${url}/auth/signup`,
+        { fullName, email, password },
+        { withCredentials: true }
+      );
+
+      if (data.success) {
+        navigate("/");
+      }
+    } catch (error) {
+      setError(
+        error?.response?.data?.message || "error occured while signing up"
+      );
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <div className="min-h-screen w-screen flex items-center justify-center bg-linear-to-br from-purple-100 to-purple-300">

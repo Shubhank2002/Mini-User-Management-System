@@ -23,6 +23,7 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError('')
     const url = import.meta.env.VITE_API_URL;
 
     const { email, password } = form;
@@ -42,7 +43,7 @@ const Login = () => {
 
     try {
       setloading(true);
-      const { data } = await axios.post(`${url}/auth/login`, form);
+      const { data } = await axios.post(`${url}/auth/login`, form,{ withCredentials: true });
 
       if (data.success) navigate("/dashboard");
     } catch (error) {
