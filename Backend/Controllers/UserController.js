@@ -41,9 +41,9 @@ const updateProfile = async (req, res) => {
 };
 
 const changePassword = async (req, res) => {
-  const { oldPassword, newPassword } = req.body;
+  const { currentPassword, newPassword } = req.body;
 
-  if (!oldPassword || !newPassword) {
+  if (!currentPassword || !newPassword) {
     return res.status(400).json({
       success: false,
       message: "Old and new password are required",
@@ -52,7 +52,7 @@ const changePassword = async (req, res) => {
 
   const user = await User.findById(req.user.id);
 
-  const isMatch = await bcrypt.compare(oldPassword, user.password);
+  const isMatch = await bcrypt.compare(currentPassword, user.password);
 
   if (!isMatch) {
     return res.status(401).json({

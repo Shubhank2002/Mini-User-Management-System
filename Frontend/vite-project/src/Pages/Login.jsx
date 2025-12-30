@@ -23,7 +23,7 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError('')
+    setError("");
     const url = import.meta.env.VITE_API_URL;
 
     const { email, password } = form;
@@ -43,11 +43,16 @@ const Login = () => {
 
     try {
       setloading(true);
-      const { data } = await axios.post(`${url}/auth/login`, form,{ withCredentials: true });
+      const { data } = await axios.post(`${url}/auth/login`, form, {
+        withCredentials: true,
+      });
 
-      if (data.success) navigate("/dashboard");
+      if (data.success) {
+        localStorage.setItem("user", JSON.stringify(data.user));
+        navigate("/dashboard");
+      }
     } catch (error) {
-        setError(error?.response?.data?.message || "Login failed. Try again.")
+      setError(error?.response?.data?.message || "Login failed. Try again.");
     } finally {
       setloading(false);
     }
@@ -96,12 +101,8 @@ const Login = () => {
             />
           </div>
 
-          
-          <p className="text-sm text-red-600 text-center ">
-             {error}
-          </p>
+          <p className="text-sm text-red-600 text-center ">{error}</p>
 
-          
           <button
             type="submit"
             disabled={loading}
@@ -113,7 +114,6 @@ const Login = () => {
           </button>
         </form>
 
-       
         <p className="text-sm text-center text-gray-600 mt-6">
           Don’t have an account?{" "}
           <span

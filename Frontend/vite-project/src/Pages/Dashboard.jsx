@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import AdminDashboard from "../components/AdminDashboard";
+import UserProfile from "../components/UserProfile";
+import Navbar from "../components/Navbar";
 
 const Dashboard = () => {
   const [user, setuser] = useState(null);
@@ -28,7 +30,13 @@ const Dashboard = () => {
   if (loading) return <h1>Loading...</h1>;
 
   if (!user) return null; // or redirect already happened
-  return <>{user?.role === "admin" ? <AdminDashboard /> : <User />}</>;
+  return (
+    <>
+      <div className="flex  flex-col min-h-screen bg-gray-50">
+        <Navbar user={user} setUser={setuser}/>
+        {user?.role === "admin" ? <AdminDashboard /> : <UserProfile user={user} setUser={setuser}/>}</div>
+    </>
+  );
 };
 
 export default Dashboard;

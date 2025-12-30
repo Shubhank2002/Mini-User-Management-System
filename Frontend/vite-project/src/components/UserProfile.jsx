@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const UserProfile = ({ user, setUser }) => {
+    const navigate=useNavigate()
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -42,15 +44,16 @@ const UserProfile = ({ user, setUser }) => {
   };
 
   const saveProfile = async () => {
+    const url=import.meta.env.VITE_API_URL
     try {
       setLoading(true);
-      const { data } = await axios.put(
-        "/api/users/profile",
+      const { data } = await axios.patch(
+        `${url}/users/me`,
         form,
         { withCredentials: true }
       );
 
-      setUser(data.user);
+      setUser(data?.user);
       setMessage("Profile updated successfully");
     } catch (err) {
       setError(err.response?.data?.message || "Update failed");
@@ -60,16 +63,18 @@ const UserProfile = ({ user, setUser }) => {
   };
 
   const changePassword = async () => {
+    const url=import.meta.env.VITE_API_URL
     try {
       setLoading(true);
-      await axios.put(
-        "/api/users/change-password",
+      await axios.patch(
+        `${url}/users/change-password`,
         passwordForm,
         { withCredentials: true }
       );
 
       setPasswordForm({ currentPassword: "", newPassword: "" });
       setMessage("Password changed successfully");
+      navigate('/')
     } catch (err) {
       setError(err.response?.data?.message || "Password update failed");
     } finally {
@@ -91,8 +96,8 @@ const UserProfile = ({ user, setUser }) => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-8">
-      <h1 className="text-2xl font-semibold mb-6">User Profile</h1>
+    <div className="max-w-3xl mx-auto p-8 text-black">
+      <h1 className="text-2xl font-semibold mb-6 text-center">User Profile</h1>
 
       {/* Messages */}
       {message && (
@@ -103,7 +108,7 @@ const UserProfile = ({ user, setUser }) => {
       )}
 
       {/* Profile Info */}
-      <div className="bg-white rounded-xl shadow p-6 mb-6">
+      <div className="bg-white rounded-xl shadow-md p-6 mb-6">
         <h2 className="text-lg font-medium mb-4">
           Profile Information
         </h2>
@@ -138,7 +143,7 @@ const UserProfile = ({ user, setUser }) => {
           </button>
           <button
             onClick={cancelChanges}
-            className="border px-4 py-2 rounded"
+            className="border border-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-100"
           >
             Cancel
           </button>
@@ -146,7 +151,7 @@ const UserProfile = ({ user, setUser }) => {
       </div>
 
       {/* Change Password */}
-      <div className="bg-white rounded-xl shadow p-6">
+      <div className="bg-white rounded-xl shadow-md p-6">
         <h2 className="text-lg font-medium mb-4">
           Change Password
         </h2>
@@ -181,7 +186,7 @@ const UserProfile = ({ user, setUser }) => {
           </button>
           <button
             onClick={cancelChanges}
-            className="border px-4 py-2 rounded"
+            className="border border-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-100"
           >
             Cancel
           </button>

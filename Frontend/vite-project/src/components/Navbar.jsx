@@ -5,26 +5,29 @@ const Navbar = ({ user, setUser }) => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
+    const url=import.meta.env.VITE_API_URL
     try {
       await axios.post(
-        "/api/auth/logout",
+        `${url}/auth/logout`,
         {},
         { withCredentials: true }
       );
 
       setUser(null);
-      navigate("/login");
-    } catch {
+      localStorage.removeItem('user')
+      navigate("/");
+    } catch(error) {
+        console.log(error)
       alert("Logout failed");
     }
   };
 
   return (
-    <nav className="w-full bg-white border-b shadow-sm px-6 py-3 flex justify-between items-center">
+    <nav className="w-screen text-black bg-white border-b shadow-sm px-12 py-3 flex justify-between items-center">
       {/* Left */}
       <div className="flex items-center gap-6">
-        <h1 className="text-lg font-semibold text-purple-600">
-          Mini UMS
+        <h1 className="text-3xl font-semibold text-purple-600">
+          Mini User Management System
         </h1>
 
         {/* Role-based navigation */}
@@ -49,10 +52,10 @@ const Navbar = ({ user, setUser }) => {
       <div className="flex items-center gap-4">
         {/* User Info */}
         <div className="text-right">
-          <p className="text-sm font-medium text-gray-800">
+          <p className="text-lg font-medium text-gray-800">
             {user?.fullName}
           </p>
-          <p className="text-xs text-gray-500 capitalize">
+          <p className="text-sm text-left text-gray-500 capitalize">
             {user?.role}
           </p>
         </div>

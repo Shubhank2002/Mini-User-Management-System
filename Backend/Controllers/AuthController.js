@@ -38,8 +38,9 @@ const SignUp = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: false,
+      sameSite: "lax",
+       path: "/", 
       maxAge: 2 * 60 * 60 * 1000, // 1 day
     });
 
@@ -66,7 +67,7 @@ const Login = async (req, res) => {
     if (UserExist.status === "inactive")
       return res.status(403).json({ message: "Account is deactivated" });
 
-    const isMatch = bcrypt.compare(password, UserExist.password);
+    const isMatch =await bcrypt.compare(password, UserExist.password);
 
     if (!isMatch)
       return res.status(401).json({ message: "Invalid credentials" });
@@ -79,14 +80,16 @@ const Login = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: false,
+      path: "/",
+      sameSite: "lax",
       maxAge: 2 * 60 * 60 * 1000, // 2 hr
     });
 
     res.status(200).json({
       message: "Login successful",
       success: true,
+      user:UserExist
     });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
@@ -111,8 +114,9 @@ const getCurrentUser = async (req, res) => {
 const Logout = (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
-    sameSite: "strict",
-    secure: true,
+    secure: false,
+    sameSite: "lax",
+    path: "/",
   });
 
   return res.status(200).json({

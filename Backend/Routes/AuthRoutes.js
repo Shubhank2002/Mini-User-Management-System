@@ -9,6 +9,6 @@ AuthRoutes.post('/login',Login)
 
 AuthRoutes.get('/me',authMiddleware,getCurrentUser)
 
-AuthRoutes.get('/logout',Logout)
+AuthRoutes.post('/logout',Logout)
 
 module.exports=AuthRoutes

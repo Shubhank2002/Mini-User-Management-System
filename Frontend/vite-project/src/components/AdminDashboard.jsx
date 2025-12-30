@@ -14,10 +14,11 @@ const AdminDashboard = () => {
   const [toast, setToast] = useState(null);
 
   const fetchUsers = async () => {
+    const url=import.meta.env.VITE_API_URL
     try {
       setLoading(true);
       const { data } = await axios.get(
-        `/api/admin/users?page=${page}&limit=10`,
+        `${url}/admin/users?page=${page}&limit=10`,
         { withCredentials: true }
       );
       setUsers(data.users);
@@ -39,9 +40,10 @@ const AdminDashboard = () => {
   };
 
   const handleAction = async () => {
+    const url=import.meta.env.VITE_API_URL
     try {
       await axios.patch(
-        `/api/admin/users/${selectedUser._id}/status`,
+        `${url}/admin/users/${selectedUser._id}/deactivate`,
         { isActive: actionType === "activate" },
         { withCredentials: true }
       );
@@ -89,29 +91,29 @@ const AdminDashboard = () => {
             {users.map((user) => (
               <tr
                 key={user._id}
-                className="border-t text-sm hover:bg-gray-50"
+                className="border-t text-black text-md hover:bg-gray-50"
               >
                 <td className="px-6 py-4">{user.email}</td>
                 <td className="px-6 py-4">{user.fullName}</td>
                 <td className="px-6 py-4 text-center">
-                  <span className="px-2 py-1 rounded text-xs bg-purple-100 text-purple-700">
+                  <span className="px-2 py-1 rounded text-md bg-purple-100 text-purple-700">
                     {user.role}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-center">
-                  {user.isActive ? (
+                <td className="px-6 py-4 text-center text-md">
+                  {user.status ? (
                     <span className="text-green-600">Active</span>
                   ) : (
                     <span className="text-red-600">Inactive</span>
                   )}
                 </td>
-                <td className="px-6 py-4 text-center">
-                  {user.isActive ? (
+                <td className="px-6 py-4 text-center text-sm">
+                  {user.status ? (
                     <button
                       onClick={() =>
                         confirmAction(user, "deactivate")
                       }
-                      className="text-red-600 hover:underline"
+                      className="text-white hover:underline bg-red-600"
                     >
                       Deactivate
                     </button>
@@ -120,7 +122,7 @@ const AdminDashboard = () => {
                       onClick={() =>
                         confirmAction(user, "activate")
                       }
-                      className="text-green-600 hover:underline"
+                      className="text-white bg-red-400 hover:underline"
                     >
                       Activate
                     </button>
@@ -136,19 +138,19 @@ const AdminDashboard = () => {
           <button
             disabled={page === 1}
             onClick={() => setPage(page - 1)}
-            className="text-sm text-gray-600 disabled:opacity-50"
+            className="text-sm text-gray-700 disabled:opacity-50"
           >
             Previous
           </button>
 
-          <span className="text-sm">
+          <span className="text-sm text-gray-700">
             Page {page} of {totalPages}
           </span>
 
           <button
             disabled={page === totalPages}
             onClick={() => setPage(page + 1)}
-            className="text-sm text-gray-600 disabled:opacity-50"
+            className="text-sm text-gray-700 disabled:opacity-50"
           >
             Next
           </button>
