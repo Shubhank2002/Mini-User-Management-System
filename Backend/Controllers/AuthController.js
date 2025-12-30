@@ -58,7 +58,7 @@ const Login = async (req, res) => {
   try {
     const UserExist = await User.findOne({ email });
     if (!UserExist)
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "Please Signup first" });
 
     if ((UserExist.status = "inactive"))
       return res.status(403).json({ message: "Account is deactivated" });

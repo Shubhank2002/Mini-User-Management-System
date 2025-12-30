@@ -13,7 +13,7 @@ app.use(cookie_parser())
 app.use(express.json());
 ConnectDB();
 
-const port = process.env.PORT;
+const port = process.env.PORT || 8000;
 
 app.use("/api/auth", AuthRoutes);
 
