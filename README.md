@@ -129,7 +129,17 @@ VITE_API_URL
   Patch /api/admin/user/:id/deactivate
   ```
 ## API Testing
-- APIs tested using Postman
+### Backend Unit Tests
+Testing Tools
+- Jest
+### covered apis
+- User Signup API
+- User Login API
+- Get Current User API (Protected Route)
+### Test Scenarios
+- Successful and failed authentication
+- Validation and error handling
+- Authorization for protected routes
 ## Features Implemented
 - User Signup & Login
 - Protected routes
