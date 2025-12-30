@@ -10,7 +10,7 @@ const UserRoutes = require("./Routes/UserRoutes");
 
 app.use(
   cors({
-    origin:[ "http://localhost:5173","https://mini-user-management-system.netlify.app/"],
+    origin:[ "http://localhost:5173","https://mini-user-management-system.netlify.app"],
     credentials: true,
   })
 );
