@@ -7,8 +7,7 @@ It supports user signup, login, authentication using JWT (stored in cookies), pr
 - https://mini-user-management-system.netlify.app/
 ### Backend
 - https://mini-user-management-system-hywm.onrender.com
-### Postman
-- https://malekafroz06-5897284.postman.co/workspace/shubhank~ade198c6-2812-4fa0-a25c-f139f03be48b/collection/50572275-8a698863-1e87-49b3-8a86-af5cebba0d0c?action=share&source=copy-link&creator=50572275
+
 
 
 ## Tech Stack Used
